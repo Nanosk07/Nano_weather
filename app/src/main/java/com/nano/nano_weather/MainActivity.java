@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
     public void initPermission(String[] permissions) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
             for (String permission : permissions) {
                 if (ContextCompat.checkSelfPermission(getApplicationContext(), permission) != PackageManager.PERMISSION_GRANTED) {  //未授权就进行授权
                     ActivityCompat.requestPermissions(this,permissions,1);
@@ -145,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
             String district = location.getDistrict();    //获取区县
             String street = location.getStreet();    //获取街道信息
             Log.e("t",city);
+            toolbar.setTitle(city);
         }
     }
 
@@ -166,10 +166,16 @@ public class MainActivity extends AppCompatActivity {
     private void initToolbar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.open,R.string.close);
         toggle.syncState();
         drawerLayout.addDrawerListener(toggle);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+//        if (drawerLayout.)
+    }
 }
