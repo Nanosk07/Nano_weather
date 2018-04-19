@@ -25,6 +25,7 @@ import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.nano.nano_weather.Fragment.MainFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private LocationClient mLocationClient;
     private long exitTime = 0;
 
+    private android.support.v4.app.FragmentManager fragmentManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,15 @@ public class MainActivity extends AppCompatActivity {
         initToolbar();
         initLocation();
 
+    }
+    public void handleWeatherID(String city){
+        MainFragment mainFragment = new MainFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("id",city);
+        mainFragment.setArguments(bundle);
+        fragmentManager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.coor_layout,mainFragment).commit();
     }
 
     //请求权限
@@ -148,6 +160,10 @@ public class MainActivity extends AppCompatActivity {
                 toolbar.setTitle("成都");
             }else {
                 toolbar.setTitle(city);
+                handleWeatherID(city);
+            }
+            if (mLocationClient != null){
+                mLocationClient.stop();
             }
         }
     }
@@ -170,7 +186,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void initToolbar() {
         setSupportActionBar(toolbar);
-        toolbar.setTitle("定位中");
         getSupportActionBar().setHomeButtonEnabled(true);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);

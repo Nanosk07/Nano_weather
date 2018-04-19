@@ -198,7 +198,7 @@ public class ChooseCity extends AppCompatActivity {
                 String responseText = response.body().string();
                 boolean result = false;
                 if ("province".equals(type)) {
-                    result = ResponseUtil.provinceResponce(responseText);
+                    result = ResponseUtil.provinceResponse(responseText);
                 } else if ("city".equals(type)) {
                     result = ResponseUtil.cityResponse(responseText,selectedProvince.getId());
                 } else if ("country".equals(type)) {
