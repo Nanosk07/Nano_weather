@@ -2,7 +2,6 @@ package com.nano.nano_weather;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -19,14 +18,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
+import android.view.Gravity;
 import android.widget.Toast;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.nano.nano_weather.Location.MyLocationListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     NavigationView navigationView;
 
     private LocationClient mLocationClient;
+    private long exitTime = 0;
 
 
     @Override
@@ -59,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         initLocation();
 
     }
+
     //请求权限
     //参考 https://blog.csdn.net/xietansheng/article/details/54315674
     public void initPermission(String[] permissions) {
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             for (String permission : permissions) {
                 if (ContextCompat.checkSelfPermission(getApplicationContext(), permission) != PackageManager.PERMISSION_GRANTED) {  //未授权就进行授权
-                    ActivityCompat.requestPermissions(this,permissions,1);
+                    ActivityCompat.requestPermissions(this, permissions, 1);
                 }
 
             }
@@ -78,31 +78,29 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        for (int grantResult:grantResults
-             ) {
-            if(grantResult != 1){
-                Toast.makeText(this,"权限申请失败",Toast.LENGTH_SHORT).show();
+        for (int grantResult : grantResults
+                ) {
+            if (grantResult != 1) {
+                Toast.makeText(this, "权限申请失败", Toast.LENGTH_SHORT).show();
                 openAppDetails();
                 break;
             }
         }
 
     }
+
     private void openAppDetails() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("请到 “应用信息 -> 权限” 中授予！");
-        builder.setPositiveButton("去手动授权", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent();
-                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                intent.addCategory(Intent.CATEGORY_DEFAULT);
-                intent.setData(Uri.parse("package:" + getPackageName()));
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                startActivity(intent);
-            }
+        builder.setPositiveButton("去手动授权", (dialog, which) -> {
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            intent.addCategory(Intent.CATEGORY_DEFAULT);
+            intent.setData(Uri.parse("package:" + getPackageName()));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+            startActivity(intent);
         });
         builder.setNegativeButton("取消", null);
         builder.show();
@@ -129,10 +127,11 @@ public class MainActivity extends AppCompatActivity {
         //需将配置好的LocationClientOption对象，通过setLocOption方法传递给LocationClient对象使用
         mLocationClient.start();
 
-}
+    }
+
     public class MyLocationListener extends BDAbstractLocationListener {
         @Override
-        public void onReceiveLocation(BDLocation location){
+        public void onReceiveLocation(BDLocation location) {
             //此处的BDLocation为定位结果信息类，通过它的各种get方法可获取定位相关的全部结果
             //以下只列举部分获取地址相关的结果信息
             //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
@@ -143,39 +142,58 @@ public class MainActivity extends AppCompatActivity {
             String city = location.getCity();    //获取城市
             String district = location.getDistrict();    //获取区县
             String street = location.getStreet();    //获取街道信息
-            Log.e("t",city);
-            toolbar.setTitle(city);
+            Log.e("t", city);
+            if (city==null){
+                Toast.makeText(MainActivity.this,"定位失败，使用默认城市",Toast.LENGTH_SHORT).show();
+                toolbar.setTitle("成都");
+            }else {
+                toolbar.setTitle(city);
+            }
         }
     }
 
     private void initNavigation() {
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.add_city:
-                        startActivity(new Intent(MainActivity.this,ChooseCity.class));
+        navigationView.setNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.add_city:
+                    startActivity(new Intent(MainActivity.this, ChooseCity.class));
+                case R.id.multy_city:
 
+                case R.id.about:
 
-                }
-                return false;
+                case R.id.setting:
+
             }
+            return false;
         });
     }
 
     private void initToolbar() {
         setSupportActionBar(toolbar);
+        toolbar.setTitle("定位中");
         getSupportActionBar().setHomeButtonEnabled(true);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawerLayout,toolbar,R.string.open,R.string.close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open, R.string.close);
         toggle.syncState();
         drawerLayout.addDrawerListener(toggle);
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-//        if (drawerLayout.)
+        if (drawerLayout.isDrawerOpen(Gravity.START)) {
+            drawerLayout.closeDrawers();
+        } else {
+            if (System.currentTimeMillis() - exitTime>2000){
+                Toast.makeText(getApplicationContext(), "再按一次退出程序",
+                        Toast.LENGTH_SHORT).show();
+                exitTime = System.currentTimeMillis();
+            } else{
+                finish();
+                System.exit(0);
+            }
+
+        }
     }
+
 }

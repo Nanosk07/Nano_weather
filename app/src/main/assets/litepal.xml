@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
+
+    <dbname value="nano_weather" />
+
+    <version value="1" />
+
+    <list>
+        <mapping class="com.nano.nano_weather.DataBase.Province" />
+        <mapping class="com.nano.nano_weather.DataBase.City" />
+        <mapping class="com.nano.nano_weather.DataBase.Country" />
+    </list>
+
+</litepal>
