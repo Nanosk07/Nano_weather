@@ -19,16 +19,24 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.bumptech.glide.Glide;
 import com.nano.nano_weather.Fragment.MainFragment;
+import com.nano.nano_weather.utils.HttpUtil;
+
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
     CoordinatorLayout coordinatorLayout;
     @BindView(R.id.navi_view)
     NavigationView navigationView;
+//    @BindView(R.id.pic_main)
+//    ImageView imageView;
 
     private LocationClient mLocationClient;
     private long exitTime = 0;
@@ -56,11 +66,33 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initPermission(permissions);
+//        initPic();
         initNavigation();
         initToolbar();
         initLocation();
 
     }
+
+//    private void initPic() {
+//        String url = "https://cn.bing.com/az/hprichbg/rb/GrandPrismatic_ZH-CN10343735220_1920x1080.jpg";
+//        HttpUtil.sendOKHttpRequest(url, new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                Toast.makeText(MainActivity.this,"图片加载失败",Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Glide.with(MainActivity.this).load(url).into(imageView);
+//                    }
+//                });
+//            }
+//        });
+//    }
+
     public void handleWeatherID(String city){
         MainFragment mainFragment = new MainFragment();
         Bundle bundle = new Bundle();
@@ -161,9 +193,9 @@ public class MainActivity extends AppCompatActivity {
             }else {
                 toolbar.setTitle(city);
                 handleWeatherID(city);
-            }
-            if (mLocationClient != null){
-                mLocationClient.stop();
+                if (mLocationClient != null) {
+                    mLocationClient.stop();
+                }
             }
         }
     }
