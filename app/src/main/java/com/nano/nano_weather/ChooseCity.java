@@ -84,7 +84,7 @@ public class ChooseCity extends AppCompatActivity {
                 selectedCity = cityList.get(position);
                 queryCountry();
             }else if (currentLevel == LEVEL_COUNTRY){
-                String weatherId = countryList.get(position).getWeatherID();
+                String weatherId = countryList.get(position).getCountry();
                 Intent intent =new Intent(ChooseCity.this,MainActivity.class);
                 intent.putExtra("weather_id",weatherId);
                 startActivity(intent);
@@ -182,16 +182,12 @@ public class ChooseCity extends AppCompatActivity {
         HttpUtil.sendOKHttpRequest(address, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        closeProgressDialog();
-                        Toast.makeText(ChooseCity.this, "加载失败...", Toast.LENGTH_SHORT).show();
-                    }
+                runOnUiThread(() -> {
+                    closeProgressDialog();
+                    Toast.makeText(ChooseCity.this, "加载失败", Toast.LENGTH_SHORT).show();
                 });
             }
 
-            //在onResponse()方法中 调用Utility.handleProvinceResponse()进行数据解析和处理
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {

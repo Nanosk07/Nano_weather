@@ -150,6 +150,23 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        String city = intent.getStringExtra("weather_id");
+        if(city != null){
+            toolbar.setTitle(city);
+            MainFragment mainFragment = new MainFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString("id",city);
+            mainFragment.setArguments(bundle);
+            fragmentManager = getSupportFragmentManager();
+            android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.coor_layout,mainFragment).commit();
+        }
+    }
+
     private void initLocation() {
 
         MyLocationListener myListener = new MyLocationListener();

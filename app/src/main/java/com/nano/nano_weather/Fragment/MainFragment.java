@@ -100,19 +100,11 @@ public class MainFragment extends Fragment {
         weatherID = getArguments().getString("id");
         scrollView.setVisibility(View.INVISIBLE);
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                requestWeather(weatherID);
-            }
-        });
+        swipeRefreshLayout.setOnRefreshListener(() -> requestWeather(weatherID));
         if (i == 1) {
-            swipeRefreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    swipeRefreshLayout.setRefreshing(true);
-                    requestWeather(weatherID);
-                }
+            swipeRefreshLayout.post(() -> {
+                swipeRefreshLayout.setRefreshing(true);
+                requestWeather(weatherID);
             });
         }
         i++;
@@ -185,7 +177,7 @@ public class MainFragment extends Fragment {
                 icon_weather_image.setImageResource(R.mipmap.sunny);
             }
             if (weather.now.cond_code == 101) {
-                icon_weather_image.setImageResource(R.mipmap.cloudy5);
+                icon_weather_image.setImageResource(R.mipmap.cloudy4);
             }
             if (weather.now.cond_code == 102 || weather.now.cond_code == 103) {
                 icon_weather_image.setImageResource(R.mipmap.cloudy2);
@@ -258,8 +250,12 @@ public class MainFragment extends Fragment {
             scrollView.setVisibility(View.VISIBLE);
         }
         if (airQuality != null){
-            qlit_text.setText("空气"+airQuality.aqi.qlty+"  "+airQuality.aqi.aqi);
-            aqi_text.setText("PM2.5  "+airQuality.aqi.pm25);
+            if(airQuality.aqi.pm25 != null&&airQuality.aqi.aqi!=null){
+                qlit_text.setText("空气"+airQuality.aqi.qlty+"  "+airQuality.aqi.aqi);
+                aqi_text.setText("PM2.5  "+airQuality.aqi.pm25);
+            } else {
+                Toast.makeText(getContext(),"空气质量信息获取失败",Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }
