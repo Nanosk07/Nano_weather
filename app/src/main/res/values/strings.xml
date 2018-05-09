@@ -8,6 +8,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="setting">是否开启通知栏</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

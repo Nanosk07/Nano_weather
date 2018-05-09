@@ -1,5 +1,6 @@
 package com.nano.nano_weather.Fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -88,6 +89,15 @@ public class MainFragment extends Fragment {
     private String weatherID;
     private LinearLayout life_linear;
     private int i = 1;
+    private MyCallBack callBack;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof MyCallBack){
+            callBack = (MyCallBack) context;
+        }
+    }
 
     @Nullable
     @Override
@@ -111,6 +121,7 @@ public class MainFragment extends Fragment {
         return view;
 
     }
+
 
     private void requestWeather(String weatherID) {
         String url1 = "https://free-api.heweather.com/s6/weather?" +
@@ -169,6 +180,8 @@ public class MainFragment extends Fragment {
             String temp = weather.now.tmp + "℃";
             String hum = "降水量：" + weather.now.hum + "mm";
             String txt = weather.now.cond_txt;
+            int code = weather.now.cond_code;
+            callBack.sendMessage(cityName,temp,txt,code);
             tmp_text.setText(temp);
             tmp_text.setTextSize(25);
             hum_text.setText(hum);
@@ -257,5 +270,8 @@ public class MainFragment extends Fragment {
                 Toast.makeText(getContext(),"空气质量信息获取失败",Toast.LENGTH_SHORT).show();
             }
         }
+    }
+    public interface MyCallBack{
+        void sendMessage(String cityName,String tmp,String weather,int code);
     }
 }

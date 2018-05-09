@@ -2,15 +2,24 @@ package com.nano.nano_weather;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,26 +28,26 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.bumptech.glide.Glide;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.nano.nano_weather.Fragment.MainFragment;
-import com.nano.nano_weather.utils.HttpUtil;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity implements MainFragment.MyCallBack {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -50,6 +59,11 @@ public class MainActivity extends AppCompatActivity {
     NavigationView navigationView;
 //    @BindView(R.id.pic_main)
 //    ImageView imageView;
+    private String city;
+    private int iconID;
+    private String nameNotifi;
+    private String tmpNotifi;
+    private String weatherNotifi;
 
     private LocationClient mLocationClient;
     private long exitTime = 0;
@@ -59,13 +73,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
-                , Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        initPermission(permissions);
+        initPermission();
 //        initPic();
         initNavigation();
         initToolbar();
@@ -104,27 +115,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //请求权限
-    //参考 https://blog.csdn.net/xietansheng/article/details/54315674
-    public void initPermission(String[] permissions) {
-
+    public void initPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            for (String permission : permissions) {
-                if (ContextCompat.checkSelfPermission(getApplicationContext(), permission) != PackageManager.PERMISSION_GRANTED) {  //未授权就进行授权
-                    ActivityCompat.requestPermissions(this, permissions, 1);
-                }
-
+            List<String> permissionList=new ArrayList<>();
+            if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
+                permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION);
             }
-
+            if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
+                permissionList.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+            }
+            if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE)!= PackageManager.PERMISSION_GRANTED){
+                permissionList.add(Manifest.permission.READ_PHONE_STATE);
+            }
+            if(ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+                permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            }
+            if(!permissionList.isEmpty()){
+                String[] permissions = permissionList.toArray(new String[permissionList.size()]);
+                ActivityCompat.requestPermissions(MainActivity.this,permissions,1);
+            }
         }
 
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         for (int grantResult : grantResults
                 ) {
-            if (grantResult != 1) {
+            if (grantResult != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "权限申请失败", Toast.LENGTH_SHORT).show();
                 openAppDetails();
                 break;
@@ -190,6 +208,62 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void sendMessage(String cityName,String tmp,String weather,int code) {
+        nameNotifi = cityName;
+        tmpNotifi = tmp;
+        weatherNotifi = weather;
+
+        if (code == 100) {
+            iconID = R.mipmap.sunny;
+        }else
+        if (code == 101) {
+            iconID = R.mipmap.cloudy4;
+        }else
+        if (code == 102 || code == 103) {
+            iconID = R.mipmap.cloudy2;
+        }else
+        if (code == 104) {
+            iconID = R.mipmap.overcast;
+        }else
+        if (code >= 200 && code <= 213) {
+            iconID = R.mipmap.windy;
+        }else
+        if (code == 300 || code == 301) {
+            iconID = R.mipmap.shower2;
+        }else
+        if (code == 302 || code == 303) {
+            iconID = R.mipmap.tstorm3;
+        }else
+        if (code == 304) {
+            iconID = R.mipmap.hail;
+        }else
+        if (code >= 305 && code <= 313) {
+            iconID = R.mipmap.shower3;
+        }else
+        if (code == 400 || code == 401) {
+            iconID = R.mipmap.snow4;
+        }else
+        if (code == 402 || code == 403) {
+            iconID = R.mipmap.snow5;
+        }else
+        if (code >= 404 && code <= 406) {
+            iconID = R.mipmap.sleet;
+        }else
+        if (code == 407) {
+            iconID = R.mipmap.snow3;
+        }else
+        if (code == 500 || code == 501) {
+            iconID = R.mipmap.fog;
+        }else
+        if (code >= 502 && code <= 508) {
+            iconID = R.mipmap.overcast;
+        }else
+        if (code >= 900 && code <= 999) {
+            iconID = R.mipmap.unkonw;
+        }
+    }
+
     public class MyLocationListener extends BDAbstractLocationListener {
         @Override
         public void onReceiveLocation(BDLocation location) {
@@ -200,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
             String addr = location.getAddrStr();    //获取详细地址信息
             String country = location.getCountry();    //获取国家
             String province = location.getProvince();    //获取省份
-            String city = location.getCity();    //获取城市
+            city = location.getCity();    //获取城市
             String district = location.getDistrict();    //获取区县
             String street = location.getStreet();    //获取街道信息
             Log.e("t", city);
@@ -221,12 +295,21 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.add_city:
-                    startActivity(new Intent(MainActivity.this, ChooseCity.class));
+                    startActivity(new Intent(MainActivity.this,ChooseCity.class));
+                case R.id.map_city:
+                    startActivity(new Intent(MainActivity.this,MapActivity.class));
                 case R.id.multy_city:
-
+//                    startActivity(new Intent(MainActivity.this,MapActivity.class));
                 case R.id.about:
 
                 case R.id.setting:
+                    Intent intent = new Intent();
+                    intent.putExtra("city",nameNotifi);
+                    intent.putExtra("tmp",tmpNotifi);
+                    intent.putExtra("weather",weatherNotifi);
+                    intent.putExtra("icon",iconID);
+                    intent.setClass(MainActivity.this,SettingActivity.class);
+                    startActivity(intent);
 
             }
             return false;
@@ -243,8 +326,11 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(toggle);
     }
 
+
     @Override
     public void onBackPressed() {
+        NotificationManager notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
         if (drawerLayout.isDrawerOpen(Gravity.START)) {
             drawerLayout.closeDrawers();
         } else {

@@ -23,7 +23,7 @@
             android:id="@+id/item_city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="厦门"
+            tools:text="成都"
             android:textSize="16sp"
             android:layout_marginStart="20dp"/>
     </LinearLayout>

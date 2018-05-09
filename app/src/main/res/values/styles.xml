@@ -12,6 +12,9 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:background">@mipmap/startpic</item>
     </style>
+    <style name="MapActivity">
+        <item name="android:windowNoTitle">true</item>
+    </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
