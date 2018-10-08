@@ -9,4 +9,6 @@ import com.google.gson.annotations.SerializedName;
 public class AirQuality {
     @SerializedName("air_now_city")
     public Aqi aqi;
+    @SerializedName("status")
+    public String status;
 }

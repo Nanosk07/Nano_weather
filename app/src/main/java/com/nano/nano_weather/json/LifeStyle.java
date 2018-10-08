@@ -2,11 +2,13 @@ package com.nano.nano_weather.json;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by 26039 on 2018/4/19.
  */
 
-public class LifeStyle {
+public class LifeStyle implements Serializable{
     @SerializedName("txt")
     public String txt;
     @SerializedName("brf")

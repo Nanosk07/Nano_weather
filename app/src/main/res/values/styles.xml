@@ -12,12 +12,14 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:background">@mipmap/startpic</item>
     </style>
-    <style name="MapActivity">
-        <item name="android:windowNoTitle">true</item>
+
+    <style name="text_shadow">
+        <item name="android:shadowColor">@android:color/darker_gray</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">1</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

@@ -3,23 +3,33 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="10dp"
-    android:background="#2000"
     android:paddingBottom="10dp">
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:id="@+id/imageview_daily"
+        android:scaleType="fitCenter"
         android:layout_weight="1"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/date_daily"
         android:layout_weight="1"/>
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/tmp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/temp_daily"
         android:layout_weight="1"/>
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/rain_probability"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

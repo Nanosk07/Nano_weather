@@ -4,26 +4,56 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.nano.nano_weather.MainActivity"
+    tools:context="com.nano.nano_weather.Ui.MainActivity"
     tools:openDrawer="start"
     android:id="@+id/draw_layout">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
 
-        <include layout="@layout/toolbar" />
-        <!--<ImageView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:id="@+id/pic_main"/>-->
-        <android.support.design.widget.CoordinatorLayout
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coor_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <include layout="@layout/toolbar" />
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tablayout"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                app:tabIndicatorColor="#000"
+                app:tabTextColor="#fff">
+
+            </android.support.design.widget.TabLayout>
+
+        </android.support.design.widget.AppBarLayout>
+
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/coor_layout">
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        </android.support.design.widget.CoordinatorLayout>
-    </LinearLayout>
+        </android.support.v4.view.ViewPager>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@drawable/share"
+            app:borderWidth="0dp"
+            app:layout_anchor="@id/viewpager"
+            app:layout_anchorGravity="end|bottom"/>
+
+    </android.support.design.widget.CoordinatorLayout>
+
 
     <android.support.design.widget.NavigationView
         app:itemIconTint="@color/colorPrimaryDark"
@@ -33,5 +63,8 @@
         app:menu="@menu/navi_menu"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/header_navi"/>
+        app:headerLayout="@layout/header_navi">
+
+
+    </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>

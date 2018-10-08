@@ -1,129 +1,177 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_margin="20dp"
-    android:background="#2000">
-
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="10dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="10dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:divider="@drawable/divider"
+        android:showDividers="middle"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_height="wrap_content">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp">
 
         <ImageView
             android:id="@+id/comf_image_life"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingStart="30dp"
+            android:src="@mipmap/soft"/>
 
         <TextView
+            android:id="@+id/shushi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/comf_image_life"
+            android:layout_marginLeft="30dp"
             android:text="舒适指数"
-            android:id="@+id/shushi"
-            android:layout_marginLeft="10dp"/>
+            android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/comf_text_life"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/comf_image_life"
             android:layout_below="@+id/shushi"
             android:layout_alignLeft="@+id/shushi"/>
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp">
 
         <ImageView
             android:id="@+id/drsg_image_life"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_centerVertical="true"
+            android:layout_height="wrap_content"
+            android:paddingStart="30dp"
+            android:src="@mipmap/clothes"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="穿衣指数"
+            android:textSize="16sp"
+            android:layout_toEndOf="@+id/drsg_image_life"
             android:id="@+id/chuanyi"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="30dp"/>
 
         <TextView
             android:id="@+id/drsg_text_life"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/chuanyi"
+            android:layout_toEndOf="@+id/drsg_image_life"
             android:layout_alignLeft="@+id/chuanyi"/>
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp">
 
         <ImageView
             android:id="@+id/sport_image_life"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingStart="30dp"
+            android:src="@mipmap/sport"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="运动指数"
+            android:textSize="16sp"
             android:id="@+id/yundong"
-            android:layout_marginLeft="10dp"/>
+            android:layout_toEndOf="@+id/sport_image_life"
+            android:layout_marginLeft="30dp"/>
 
         <TextView
             android:id="@+id/sport_text_life"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/sport_image_life"
             android:layout_below="@+id/yundong"
             android:layout_alignLeft="@+id/yundong"/>
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp">
 
         <ImageView
             android:id="@+id/air_image_life"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingStart="30dp"
+            android:src="@mipmap/air"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="空气指数"
+            android:textSize="16sp"
+            android:layout_toEndOf="@+id/air_image_life"
             android:id="@+id/kongqi"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="30dp"/>
 
         <TextView
             android:id="@+id/air_text_life"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/air_image_life"
             android:layout_below="@+id/kongqi"
             android:layout_alignLeft="@+id/kongqi"/>
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp">
 
         <ImageView
             android:id="@+id/uv_image_life"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingStart="30dp"
+            android:src="@mipmap/uv"/>
 
         <TextView
+            android:id="@+id/uv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="紫外线指数"
-            android:id="@+id/uv"
-            android:layout_marginLeft="10dp"/>
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/uv_image_life"
+            android:layout_marginLeft="30dp"
+            android:textSize="16sp"
+            android:text="紫外线指数" />
 
         <TextView
             android:id="@+id/uv_text_life"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/uv"
+            android:layout_toEndOf="@+id/uv_image_life"
             android:layout_alignLeft="@+id/uv"/>
     </RelativeLayout>
-
-</LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>
